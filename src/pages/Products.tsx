@@ -14,14 +14,14 @@ const products = [
     name: 'Hex Flange Nut',
     category: 'Nuts',
     description: 'Self-locking flange nut with serrated bearing surface',
-    image: 'https://images.unsplash.com/photo-1597484661731-be2d4d0ee5b6?auto=format&fit=crop&q=80'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEOywV5QSzNQrNDYRsQc8-YEe6Rcq3eiBhVg&s'
   },
   {
     id: 3,
-    name: 'Thread Rolling Dies',
+    name: 'Thread Rolling',
     category: 'Tools',
     description: 'Precision ground dies for thread rolling applications',
-    image: 'https://images.unsplash.com/photo-1590959651373-a3db0f38a961?auto=format&fit=crop&q=80'
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlScmllvkK9-KbBMOvhH7GRXeyRsQwMT--kQ&s'
   },
   {
     id: 4,
