@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Upload, X, Check, Loader2, LogIn } from 'lucide-react';
+import React, { useState } from 'react';
+import { Upload, X, Check, Loader2 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { Toaster, toast } from 'sonner';
 
@@ -15,7 +15,7 @@ const FileUpload: React.FC<{
 }> = ({ onUploadComplete, onUploadStart, disabled = false }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const acceptedFormats = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.png', '.jpg', '.jpeg'];
   const maxSizeMB = 10;
@@ -25,7 +25,7 @@ const FileUpload: React.FC<{
     if (!selectedFile) return;
 
     const fileName = selectedFile.name.toLowerCase();
-    const isValidFormat = acceptedFormats.some(format => 
+    const isValidFormat = acceptedFormats.some(format =>
       fileName.endsWith(format.toLowerCase())
     );
 
@@ -41,38 +41,38 @@ const FileUpload: React.FC<{
   };
 
   const handleUpload = async () => {
-        if (!file) return;
-      
-        setIsUploading(true);
-        onUploadStart?.();
-      
-        const fileExt = file.name.split('.').pop();
-        const filePath = `uploads/${crypto.randomUUID()}.${fileExt}`;
-      
-        try {
-          // No owner validation needed
-          const { error } = await supabase.storage
-            .from('client_uploads')
-            .upload(filePath, file, {
-              upsert: false,
-              cacheControl: '3600',
-            });
-      
-          if (error) throw error;
-      
-          const { data: { publicUrl } } = supabase.storage
-            .from('client_uploads')
-            .getPublicUrl(filePath);
-      
-          onUploadComplete(publicUrl, file.name);
-          toast.success('File uploaded successfully!');
-          setFile(null);
-        } catch (err: any) {
-          toast.error(err.message || 'Upload failed');
-        } finally {
-          setIsUploading(false);
-        }
-      };
+    if (!file) return;
+
+    setIsUploading(true);
+    onUploadStart?.();
+
+    const fileExt = file.name.split('.').pop();
+    const filePath = `uploads/${crypto.randomUUID()}.${fileExt}`;
+
+    try {
+      const { error } = await supabase.storage
+        .from('client_uploads')
+        .upload(filePath, file, {
+          upsert: false,
+          cacheControl: '3600',
+        });
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('client_uploads')
+        .getPublicUrl(filePath);
+
+      onUploadComplete(publicUrl, file.name);
+      toast.success('File uploaded successfully!');
+      setFile(null);
+    } catch (err: any) {
+      toast.error(err.message || 'Upload failed');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="mb-6">
       <div className="border-2 border-dashed border-purple-900 rounded-lg p-6 text-center bg-black/50">
@@ -85,8 +85,8 @@ const FileUpload: React.FC<{
           className="hidden"
         />
         {!file ? (
-          <div 
-            onClick={() => !disabled && !isUploading && fileInputRef.current?.click()} 
+          <div
+            onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
             className={`cursor-pointer ${disabled || isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Upload className="mx-auto h-10 w-10 text-purple-400 mb-2" />
@@ -121,62 +121,49 @@ const FileUpload: React.FC<{
   );
 };
 
-const RequirementSubmissionFormWithAuth = () => {
-  const [user, setUser] = useState<any>(null);
+const RequirementSubmissionForm = () => {
+  const [contact, setContact] = useState('');
   const [description, setDescription] = useState('');
   const [fileUrl, setFileUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [needsAuth, setNeedsAuth] = useState(false);
   const [uploadInProgress, setUploadInProgress] = useState(false);
-
-  const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-    if (error) {
-      toast.error('Sign in failed');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!description.trim()) {
       toast.error('Please enter a description');
       return;
     }
-    
+
+    if (!contact.trim()) {
+      toast.error('Please enter a contact (email or phone)');
+      return;
+    }
+
     if (!fileUrl) {
       toast.error('Please upload a file');
       return;
     }
-    
+
     if (uploadInProgress) {
       toast.error('Please wait for file upload to complete');
       return;
     }
 
-    // Check if user is authenticated
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    
-    if (!currentUser) {
-      setNeedsAuth(true);
-      return;
-    }
-
-    setUser(currentUser);
     setIsSubmitting(true);
-    
+
     try {
       const { error } = await supabase
-        .from('client_requirements')  // Updated table name
+        .from('client_requirements')
         .insert({
           description,
           file_url: fileUrl,
           file_name: fileName,
-          user_id: currentUser.id,
-          user_email: currentUser.email,
-          status: 'pending'
+          user_email: contact,
+          status: 'pending',
         });
 
       if (error) throw error;
@@ -200,35 +187,13 @@ const RequirementSubmissionFormWithAuth = () => {
           onClick={() => {
             setSubmitSuccess(false);
             setDescription('');
+            setContact('');
             setFileUrl('');
             setFileName('');
-            setNeedsAuth(false);
           }}
           className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg"
         >
           Submit Another Requirement
-        </button>
-      </div>
-    );
-  }
-
-  if (needsAuth) {
-    return (
-      <div className="max-w-md mx-auto p-6 text-center bg-black border border-purple-900 rounded-lg">
-        <Toaster position="top-right" richColors />
-        <h1 className="text-xl text-purple-300 font-semibold mb-4">Sign in to Submit</h1>
-        <p className="text-purple-400 mb-4">You need to sign in to submit your requirement.</p>
-        <button
-          onClick={signInWithGoogle}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg flex items-center justify-center"
-        >
-          <LogIn className="mr-2" /> Sign in with Google
-        </button>
-        <button
-          onClick={() => setNeedsAuth(false)}
-          className="mt-4 text-purple-400 hover:text-purple-300 text-sm"
-        >
-          Cancel
         </button>
       </div>
     );
@@ -250,6 +215,21 @@ const RequirementSubmissionFormWithAuth = () => {
           disabled={isSubmitting}
         />
 
+        <div className="mb-4">
+          <label className="block text-purple-300 mb-2">
+            Your Contact (Email or Phone) <span className="text-purple-500">*</span>
+          </label>
+          <input
+            type="text"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            className="w-full bg-black text-purple-200 rounded-lg p-3 border border-purple-900 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+            placeholder="Enter your email or phone number"
+            disabled={isSubmitting}
+            required
+          />
+        </div>
+
         <div className="mb-6">
           <label className="block text-purple-300 mb-2">
             Requirement Description <span className="text-purple-500">*</span>
@@ -267,7 +247,7 @@ const RequirementSubmissionFormWithAuth = () => {
 
         <button
           type="submit"
-          disabled={isSubmitting || !fileUrl || !description.trim() || uploadInProgress}
+          disabled={isSubmitting || !fileUrl || !description.trim() || !contact.trim() || uploadInProgress}
           className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium disabled:bg-purple-800 disabled:cursor-not-allowed"
         >
           {isSubmitting || uploadInProgress ? (
@@ -281,4 +261,4 @@ const RequirementSubmissionFormWithAuth = () => {
   );
 };
 
-export default RequirementSubmissionFormWithAuth;
+export default RequirementSubmissionForm;
