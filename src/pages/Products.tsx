@@ -87,7 +87,6 @@ const Products = () => {
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-purple-200 mb-2">{product.name}</h3>
                 <p className="text-gray-400 mb-4">{product.description}</p>
-           /*     <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors duration-300">Get Quote</button>*/
               </div>
             </div>
           ))}
