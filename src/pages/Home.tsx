@@ -193,7 +193,7 @@ Get in touch            </a>
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-purple-300">Sekkot Engineering Export India</h2>
-            <p className="mt-2 text-gray-500">Excellence in Manufacturing Since 1995</p>
+            <p className="mt-2 text-gray-500">Excellence in Manufacturing Since 1971</p>
           </div>
         </div>
       </footer>
