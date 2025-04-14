@@ -46,10 +46,14 @@ function Home() {
           </div>
 
           <div className="grid grid-cols-1 gap-8 mt-12 sm:grid-cols-2 lg:grid-cols-3">
-            {[
+            {[   {
+                icon: <Cog className="w-8 h-8" />,
+                title: "VMC & CNC Machining",
+                description: "State-of-the-art LD25 machines for complex geometries and tight tolerances"
+              },
               {
                 icon: <Factory className="w-8 h-8" />,
-                title: "Coal Forging",
+                title: "Cold Forging",
                 description: "Advanced forging processes with precise temperature control and superior finish"
               },
               {
@@ -57,11 +61,7 @@ function Home() {
                 title: "Thread Rolling",
                 description: "High-precision thread rolling for superior thread quality and strength"
               },
-              {
-                icon: <Cog className="w-8 h-8" />,
-                title: "VMC & CNC Machining",
-                description: "State-of-the-art LD25 machines for complex geometries and tight tolerances"
-              },
+           
               {
                 icon: <Wrench className="w-8 h-8" />,
                 title: "Precision Job Work",
@@ -140,7 +140,7 @@ function Home() {
                 description: "Precision components for automotive manufacturers"
               },
               {
-                image: "https://images.unsplash.com/photo-1595974482597-4b8dc7ef8c6c?auto=format&fit=crop&q=80",
+                image: "https://imgs.search.brave.com/mVZqKZLQOxKOmxriih8ekHraiwLczO926pfmvqvXnpM/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDg2/ODg3MTI2L3Bob3Rv/L25ldy1qb2huLWRl/ZXJlLXRyYWN0b3Jz/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1MZHFVX0o5YTFM/VmotMEc1ZmU2RmJM/ZU1HYi1EU2dGTVlf/N1F6dE9STmpJPQ",
                 title: "Agriculture",
                 description: "Durable parts for agricultural machinery"
               },
@@ -179,9 +179,11 @@ function Home() {
             <p className="max-w-2xl mx-auto mt-4 text-lg text-purple-100">
               Contact us today to discuss your manufacturing needs and discover how we can deliver precision-engineered solutions for your business.
             </p>
-            <button className="px-8 py-3 mt-8 text-lg font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors duration-300">
-              Get in Touch
-            </button>
+            <a 
+              href="tel:8778939821" 
+              className="inline-block px-8 py-3 mt-8 text-lg font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors duration-300"
+            >
+Get in touch            </a>
           </div>
         </div>
       </section>
